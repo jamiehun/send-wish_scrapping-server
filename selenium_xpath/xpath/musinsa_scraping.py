@@ -24,10 +24,10 @@ driver = webdriver.Chrome(options=options, executable_path=DRIVER_PATH)
 driver.get("https://www.musinsa.com/app/goods/2751768/0")
 # print(driver.page_source)
 # 테스트케이스 1 : https://www.musinsa.com/app/goods/2946394?loc=goods_rank : 성공
-# 테스트케이스 2 : https://www.musinsa.com/app/goods/2912231 : 성공
-# 테스트케이스 3 : https://www.musinsa.com/app/goods/2288426 : 성공
-# 테스트케이스 4 : https://www.musinsa.com/app/goods/1937359 : 성공
-# 테스트케이스 5 : https://www.musinsa.com/app/goods/2751768/0 : 
+# 테스트케이스 2 : https://www.musinsa.com/app/goods/2912231   : 성공
+# 테스트케이스 3 : https://www.musinsa.com/app/goods/2288426   : 성공
+# 테스트케이스 4 : https://www.musinsa.com/app/goods/1937359   : 성공
+# 테스트케이스 5 : https://www.musinsa.com/app/goods/2751768/0 : 성공
 
 
 # 상품 정보
