@@ -29,11 +29,14 @@ chrome_driver = ChromeDriverManager().install()
 driver = webdriver.Chrome(options=options, executable_path=DRIVER_PATH)
 
 # URL (쿠팡, 네이버, 무신사 순)
-url = 'https://m.coupang.com/vm/products/6552462584?itemId=14634004658&vendorItemId=81875544125' # 쿠팡
-# url = "https://m.shopping.naver.com/kids/stores/1000016176/products/4847841465?NaPm=ct%3Dlcfs8ykw%7Cci%3D6ae6545058bf0a5b6906fdb0e42605ec5ab66f78%7Ctr%3Dbrc%7Csn%3D203038%7Chk%3Dafd41c17626461775eeac008bf5481009bea4150" # 네이버
+# url = 'https://m.coupang.com/vm/products/6552462584?itemId=14634004658&vendorItemId=81875544125' # 쿠팡
+url = "https://m.shopping.naver.com/kids/stores/1000016176/products/4847841465?NaPm=ct%3Dlcfs8ykw%7Cci%3D6ae6545058bf0a5b6906fdb0e42605ec5ab66f78%7Ctr%3Dbrc%7Csn%3D203038%7Chk%3Dafd41c17626461775eeac008bf5481009bea4150" # 네이버
 # url = "https://www.musinsa.com/app/goods/2926375?loc=goods_rank"
 
 driver.get(url)
+print(driver.get_window_size())
+window_height = driver.get_window_size()['height']
+
 
 # 모바일 환경 닫기 (추후 예외처리)
 if (url.find("coupang.com") != -1):   
@@ -57,6 +60,15 @@ if (url.find("coupang.com") != -1):
 else:
     # 1. 이미지 스크래핑
     imgs = driver.find_elements(By.TAG_NAME, 'img')
+    
+    # 2. 텍스트 스크래핑 
+    content = driver.find_elements(By.ID, 'content')
+    for t in content:
+        if t.location['y'] <= window_height:
+            title = t.find_element(By.TAG_NAME, 'h3')
+            print('제목 : ', title.text)
+        
+
 
 
 for i in imgs:
@@ -69,7 +81,6 @@ for i in imgs:
 # 2. 이미지
 
 # print("이미지: ", img)
-
 # print("할인가: ", discount_price.text)
 
 driver.quit()
