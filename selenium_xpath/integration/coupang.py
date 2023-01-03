@@ -28,35 +28,45 @@ options.add_experimental_option("mobileEmulation", mobile_emulation)
 chrome_driver = ChromeDriverManager().install()
 driver = webdriver.Chrome(options=options, executable_path=DRIVER_PATH)
 
-# 쿠팡
-driver.get("https://m.coupang.com/vm/products/6552462584?itemId=14634004658&vendorItemId=81875544125")
-# 네이버
-# driver.get("https://m.shopping.naver.com/kids/stores/1000016176/products/4847841465?NaPm=ct%3Dlcfs8ykw%7Cci%3D6ae6545058bf0a5b6906fdb0e42605ec5ab66f78%7Ctr%3Dbrc%7Csn%3D203038%7Chk%3Dafd41c17626461775eeac008bf5481009bea4150")
-# 무신사
+# URL (쿠팡, 네이버, 무신사 순)
+url = 'https://m.coupang.com/vm/products/6552462584?itemId=14634004658&vendorItemId=81875544125' # 쿠팡
+# url = "https://m.shopping.naver.com/kids/stores/1000016176/products/4847841465?NaPm=ct%3Dlcfs8ykw%7Cci%3D6ae6545058bf0a5b6906fdb0e42605ec5ab66f78%7Ctr%3Dbrc%7Csn%3D203038%7Chk%3Dafd41c17626461775eeac008bf5481009bea4150" # 네이버
+# url = "https://www.musinsa.com/app/goods/2926375?loc=goods_rank"
+
+driver.get(url)
 
 # 모바일 환경 닫기 (추후 예외처리)
-close_btn = driver.find_element(By.XPATH, '//*[@id="fullBanner"]/div/div/a[2]')
-close_btn.click()
-
-get_url = driver.current_url
-
-# ID 뜰 때까지 대기 (추후 예외처리)
-WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//*[@id="pdpImages"]/ul/li[1]/img')))
+if (url.find("coupang.com") != -1):   
+    close_btn = driver.find_element(By.XPATH, '//*[@id="fullBanner"]/div/div/a[2]')
+    close_btn.click()
+    WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//*[@id="pdpImages"]/ul/li[1]/img')))
 
 ## xpath 활용하지 않고 들고오기 (쿠팡)
 # 1. 이미지
 # 2. 상품명
 # 3. 상품가격
 # 4. 할인가격 
-img_collector = driver.find_element(By.ID, "pdpImages")
-imgs = img_collector.find_elements(By.TAG_NAME, 'img')
+
+# 쿠팡일 경우
+if (url.find("coupang.com") != -1):
+    # 1. 이미지 스크래핑
+    img_collector = driver.find_element(By.ID, "pdpImages")
+    imgs = img_collector.find_elements(By.TAG_NAME, 'img')
+
+# 그 외의 경우
+else:
+    # 1. 이미지 스크래핑
+    imgs = driver.find_elements(By.TAG_NAME, 'img')
+
+
 for i in imgs:
     img = i.get_attribute("src")
     # print(img)
     if 136 < img.__sizeof__()<= 400:
         print("이미지: ", img)
         break
-    
+
+# 2. 이미지
 
 # print("이미지: ", img)
 
