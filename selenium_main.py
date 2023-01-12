@@ -22,12 +22,6 @@ mobile_emulation = { "deviceName": "iPhone X" }
 options.add_experimental_option("mobileEmulation", mobile_emulation)
 
 
-def multi_processing(url):
-    pool = ProcessPool(processes=4)
-    result = pool.map(open_browser, (url,))
-    return result
-
-
 def open_browser(url):
     browser = webdriver.Chrome(options = options, executable_path=DRIVER_PATH)
     if (url.find("musinsaapp") != -1): # 무신사 앱링크면
