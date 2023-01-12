@@ -1,11 +1,12 @@
 from flask import Flask, request
-from selenium_main import web_scrap
-from pathos.multiprocessing import ProcessPool as Pool
+from selenium_final import *
+# from selenium_concurrent import *
+from multiprocessing import Process
 from time import sleep
-import time 
-import threading
+from threading import Thread
 
 app = Flask(__name__)
+use_list = [False, False, False, False]
 
 
 @app.route('/')
@@ -16,25 +17,38 @@ def hello_world():
 def webscrap():
     data = request.get_json()
     url_receive = data['url'][0]
-    sleep(1)
     # [todo] 예외처리 필요
+    sleep(5)
     
-    lock = threading.Lock()
-    
-    lock.acquire()
-    result = web_scrap(url_receive)
-    lock.release()
-    
-    return result    
-    
-    # pool = Pool(processes = 3)
-    # for result in pool.map(web_scrap, url_receive):
-    #     sleep(1)
-    #     return result
-    
-    return pool.map(web_scrap, url_receive)
+    while True:
+        if use_list[0] == False:
+            use_list[0] = True
+            result1 = Thread(target = first_browser, args=(url_receive,)).start()
+            pool.join()
+            use_list[0] = False
+            return result1
+            
+        elif use_list[1] == False:
+            use_list[1] = True
+            result2 = Thread(target = second_browser, args=(url_receive,)).start()
+            pool.join()
+            use_list[1] = False
+            return result2
         
-    # return web_scrap(url_receive)
-
+        elif use_list[2] == False:
+            use_list[2] = True
+            result3 = Thread(target = third_browser, args=(url_receive,)).start()
+            pool.join()
+            use_list[2] = False
+            return result3
+        
+        elif use_list[3] == False:
+            use_list[3] = True
+            result4 = Thread(target = fourth_browser, args=(url_receive,)).start()
+            pool.join()
+            use_list[3] = False
+            return result4
+            
+            
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000)

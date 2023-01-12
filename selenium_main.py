@@ -6,6 +6,8 @@ from selenium_title import get_title
 from selenium_img import get_img
 from flask import jsonify
 from elevenst import elevenst_get_info
+from pathos.pools import ProcessPool
+import threading
 
 DRIVER_PATH = "/chromedriver"
 options = Options()
@@ -18,12 +20,18 @@ options.add_argument("lang=ko_KR")
 options.add_argument('--disable-blink-features=AutomationControlled')
 mobile_emulation = { "deviceName": "iPhone X" }
 options.add_experimental_option("mobileEmulation", mobile_emulation)
-browser = webdriver.Chrome(options = options, executable_path=DRIVER_PATH)
 
 
-def web_scrap(url): 
+def multi_processing(url):
+    pool = ProcessPool(processes=4)
+    result = pool.map(open_browser, (url,))
+    return result
+
+
+def open_browser(url):
+    browser = webdriver.Chrome(options = options, executable_path=DRIVER_PATH)
     if (url.find("musinsaapp") != -1): # 무신사 앱링크면
-        url += "?_imcp=1"
+            url += "?_imcp=1"
     browser.get(url)
     if (url.find("11st.co.kr") != -1): # 11번가
         return elevenst_get_info(browser)
@@ -31,5 +39,7 @@ def web_scrap(url):
         title = get_title(browser, url)
         price = get_price(browser)
         img = get_img(browser, url)
-
+    browser.close()
     return jsonify({'url': url, 'title': title, 'price': price, 'img': img})
+
+
