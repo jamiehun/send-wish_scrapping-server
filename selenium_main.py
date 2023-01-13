@@ -6,6 +6,10 @@ from selenium_title import get_title
 from selenium_img import get_img
 from flask import jsonify
 from elevenst import elevenst_get_info
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from threading import Thread
+from collections import deque
+from time import sleep
 
 DRIVER_PATH = "/chromedriver"
 options = Options()
@@ -19,19 +23,42 @@ options.add_argument('--disable-blink-features=AutomationControlled')
 mobile_emulation = { "deviceName": "iPhone X" }
 options.add_experimental_option("mobileEmulation", mobile_emulation)
 
-def web_scrap(self, url): 
-    browser = webdriver.Chrome(options = options, executable_path=DRIVER_PATH)
-    browser.implicitly_wait(10) # seconds
-    if (url.find("musinsaapp") != -1): # 무신사 앱링크면
-        url += "?_imcp=1"
-    browser.get(url)
-    if (url.find("11st.co.kr") != -1): # 11번가
-        return elevenst_get_info(browser)
-    else: 
-        title = get_title(browser, url)
-        price = get_price(browser)
-        img = get_img(browser, url)
+q = deque()
+
+class CustomThread(Thread):
+    def __init__(self):
+        Thread.__init__(self)
+        self.value = None
+               
+    def run(self):
+        browser = webdriver.Chrome(options = options, executable_path=DRIVER_PATH)
+        url = q.popleft()
+        
+        if (url.find("musinsaapp") != -1): # 무신사 앱링크면
+            url += "?_imcp=1"
+        browser.get(url)
+        if (url.find("11st.co.kr") != -1): # 11번가
+            return elevenst_get_info(browser)
+        else: 
+            title = get_title(browser, url)
+            price = get_price(browser)
+            img = get_img(browser, url)
+
+        self.value = jsonify({'url': url, 'title': title, 'price': price, 'img': img})
+            
+            
+def run(url_receive):
+    q.append(url_receive)
     
-    browser.close() 
+    thread = CustomThread()
     
-    return jsonify({'url': url, 'title': title, 'price': price, 'img': img})
+    print("===before start thread")
+    thread.start()
+    print("===after start thread")
+    thread.join()
+    print("===after join thread")
+    
+    data = thread.value
+    print("===data is ...", data)
+    return data
+    
