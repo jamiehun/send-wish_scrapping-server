@@ -1,5 +1,5 @@
 from flask import Flask, request
-from selenium_main import web_scrap
+from selenium_main import *
 
 app = Flask(__name__)
 
@@ -10,9 +10,11 @@ def hello_world():
 
 @app.route('/webscrap', methods=['POST'])
 def webscrap():
+    
     data = request.get_json()
     url_receive = data['url'][0]
     # [todo] 예외처리 필요
+    
     return web_scrap(url_receive)
 
 if __name__ == '__main__':

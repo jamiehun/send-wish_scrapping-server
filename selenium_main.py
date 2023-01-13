@@ -18,10 +18,11 @@ options.add_argument("lang=ko_KR")
 options.add_argument('--disable-blink-features=AutomationControlled')
 mobile_emulation = { "deviceName": "iPhone X" }
 options.add_experimental_option("mobileEmulation", mobile_emulation)
-browser = webdriver.Chrome(options = options, executable_path=DRIVER_PATH)
+
 
 
 def web_scrap(url): 
+    browser = webdriver.Chrome(options = options, executable_path=DRIVER_PATH)
     if (url.find("musinsaapp") != -1): # 무신사 앱링크면
         url += "?_imcp=1"
     browser.get(url)
