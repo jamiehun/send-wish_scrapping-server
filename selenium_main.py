@@ -7,8 +7,8 @@ from selenium_img import get_img
 from flask import jsonify
 from elevenst import elevenst_get_info
 
-DRIVER_PATH = "/app/chrome/chromedriver"
-options = Options()
+# DRIVER_PATH = "/app/chrome/chromedriver"
+DRIVER_PATH = "/chromedriver"
 options = webdriver.ChromeOptions()
 options.add_argument("--headless")
 options.add_argument("--window-size=1920,1200")
@@ -18,20 +18,15 @@ options.add_argument("lang=ko_KR")
 options.add_argument('--disable-blink-features=AutomationControlled')
 options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
+options.add_argument("disable-gpu") 
+options.add_argument("disable-infobars")
+options.add_argument("--disable-extensions")
 mobile_emulation = { "deviceName": "iPhone X" }
 options.add_experimental_option("mobileEmulation", mobile_emulation)
-
-class Product:
-    def __init__(self):
-        self.url = ""
-        self.title = ""
-        self.price = 0
-        self.img = ""
-        self.category = ""
+browser = webdriver.Chrome(options = options, executable_path=DRIVER_PATH)
 
 def web_scrap(url): 
     try :
-        browser = webdriver.Chrome(options = options, executable_path=DRIVER_PATH)
         if (url.find("musinsaapp") != -1): # 무신사 앱링크면
             url += "?_imcp=1"
         browser.get(url)
@@ -45,21 +40,8 @@ def web_scrap(url):
             img = get_img(browser, url)
             print("img", img)
         print("===Finish Scraping===")
-        
-        print("===Finish Scraping===")
-        product = Product()
-        product.url = url
-        product.title = title
-        product.price = price
-        product.img = img
-        return product
+        return jsonify({'url': url, 'title': title, 'price': price, 'img': img})
 
     except :
         print("===SCRAP ERROR===")
-        product = Product()
-        product.url = url
-        product.title = '사이트로 이동하기'
-        product.price = '-'
-        product.img = 'https://sendwish-img-bucket.s3.ap-northeast-2.amazonaws.com/collection_default.png'
-        return product
-        
+        return jsonify({'url': url, 'title': '사이트로 이동하기', 'price': '-', 'img': 'https://sendwish-img-bucket.s3.ap-northeast-2.amazonaws.com/default_image.png'})

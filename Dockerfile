@@ -18,15 +18,9 @@ RUN apt install wget
 
 RUN apt install unzip 
 
-# RUN pip3 install gunicorn
+RUN pip3 install gunicorn
 
-# RUN pip3 install gevent
-
-RUN pip3 install keras
-
-RUN pip3 install Pillow
-
-RUN pip3 install tensorflow --no-cache-dir
+RUN pip3 install gevent
 
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 
@@ -40,4 +34,4 @@ RUN unzip /tmp/chromedriver.zip chromedriver -d /app/chrome
 
 COPY . /app
 
-CMD ["python3", "app.py"]
+CMD ["gunicorn", "app:app", "-b", "0.0.0.0:5000", "-w", "2", "--timeout=360", "-k", "gevent"]
