@@ -7,8 +7,7 @@ from selenium_img import get_img
 from flask import jsonify
 from elevenst import elevenst_get_info
 
-# DRIVER_PATH = "/app/chrome/chromedriver"
-DRIVER_PATH = "/chromedriver"
+DRIVER_PATH = "/app/chrome/chromedriver"
 options = webdriver.ChromeOptions()
 options.add_argument("--headless")
 options.add_argument("--window-size=1920,1200")
