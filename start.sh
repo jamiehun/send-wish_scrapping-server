@@ -16,13 +16,13 @@ fi
 echo "==================================================="
 echo "컨테이너 PULL"
 echo "==================================================="
-docker pull hcs4125/sendwish_scrapping
+docker pull hcs4125/sendwish_scrapping_ai
 
 
 echo "==================================================="
 echo "컨테이너 실행"
 echo "==================================================="
-docker run -p 5001:5000 -d --name=python hcs4125/sendwish_scrapping
+docker run -p 5001:5000 -d --name=python hcs4125/sendwish_scrapping_ai
 
 
 echo "==================================================="
@@ -34,4 +34,3 @@ echo "==================================================="
 echo "container 확인"
 echo "==================================================="
 docker ps -a
-

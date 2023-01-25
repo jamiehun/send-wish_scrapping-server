@@ -2,3 +2,6 @@
 __pycache__
 capture
 config.py
+img
+nohup.out
+tfserving.py
