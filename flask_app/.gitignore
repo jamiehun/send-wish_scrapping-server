@@ -1,0 +1,4 @@
+.env
+__pycache__
+capture
+config.py

@@ -1,0 +1,20 @@
+
+version: '3'
+
+services:
+  flask_app:
+    container_name: flask_app
+    restart: always
+    build: ./flask_app
+    ports:
+      - "5001:5000"
+    command: gunicorn -w 2 -b 0.0.0.0:5000 app:app -k gevent
+  
+  nginx:
+    container_name: nginx
+    restart: always
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - flask_app
