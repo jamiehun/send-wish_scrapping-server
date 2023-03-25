@@ -1,5 +1,5 @@
 from selenium.webdriver.common.by import By
-from s3_connect import default_img
+# from s3_connect import default_img
 from flask import jsonify
 import re
 
