@@ -40,7 +40,7 @@ def get_img(browser, url):
         #     else: img = default_img
 
     except:
-        img = ./default_img.jpeg
+        img = "./default_img.jpeg"
 
     # [todo] capture 폴더 안 이미지 시간되면 삭제할 수 있도록 스케줄링
 
